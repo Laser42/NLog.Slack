@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Text;
 
@@ -8,7 +8,7 @@ namespace NLog.Slack
     {
         public event Action<Exception> Error;
 
-        public void Send(string url, string data)
+        public void Send(string url, string data, string proxyUrl = null)
         {
             try
             {
@@ -16,6 +16,8 @@ namespace NLog.Slack
                 {
                     client.Headers[HttpRequestHeader.ContentType] = "application/json";
                     client.Encoding = Encoding.UTF8;
+                    if (!string.IsNullOrEmpty(proxyUrl))
+                        client.Proxy = new WebProxy(proxyUrl);
                     client.UploadString(url, "POST", data);
                 }
             }
