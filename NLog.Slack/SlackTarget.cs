@@ -13,6 +13,8 @@ namespace NLog.Slack
         [RequiredParameter]
         public string WebHookUrl { get; set; }
 
+        public string ProxyUrl { get; set; }
+
         public bool Compact { get; set; }
 
         public override IList<TargetPropertyWithContext> ContextProperties { get; } = new List<TargetPropertyWithContext>();
@@ -56,7 +58,7 @@ namespace NLog.Slack
             var message = RenderLogEvent(Layout, info.LogEvent);
 
             var slack = SlackMessageBuilder
-                .Build(this.WebHookUrl)
+                .Build(this.WebHookUrl, this.ProxyUrl)
                 .OnError(e => info.Continuation(e))
                 .WithMessage(message);
 
@@ -79,13 +81,14 @@ namespace NLog.Slack
                 if (attachment.Fields.Count > 0)
                     slack.AddAttachment(attachment);
             }
-      
+
             var exception = info.LogEvent.Exception;
             if (!this.Compact && exception != null)
             {
                 var color = this.GetSlackColorFromLogLevel(info.LogEvent.Level);
                 var exceptionAttachment = new Attachment(exception.Message) { Color = color };
-                exceptionAttachment.Fields.Add(new Field("StackTrace") {
+                exceptionAttachment.Fields.Add(new Field("StackTrace")
+                {
                     Title = $"Type: {exception.GetType().ToString()}",
                     Value = exception.StackTrace ?? "N/A"
                 });
