@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NLog.Slack.Models;
 
 namespace NLog.Slack
@@ -7,20 +7,23 @@ namespace NLog.Slack
     {
         private readonly string _webHookUrl;
 
+        private readonly string _proxyUrl;
+
         private readonly SlackClient _client;
 
         private readonly Payload _payload;
 
-        public SlackMessageBuilder(string webHookUrl)
+        public SlackMessageBuilder(string webHookUrl, string proxyUrl)
         {
             this._webHookUrl = webHookUrl;
+            this._proxyUrl = proxyUrl;
             this._client = new SlackClient();
             this._payload = new Payload();
         }
 
-        public static SlackMessageBuilder Build(string webHookUrl)
+        public static SlackMessageBuilder Build(string webHookUrl, string proxyUrl)
         {
-            return new SlackMessageBuilder(webHookUrl);
+            return new SlackMessageBuilder(webHookUrl, proxyUrl);
         }
 
         public SlackMessageBuilder WithMessage(string message)
