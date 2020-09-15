@@ -13,6 +13,7 @@ namespace NLog.Slack
         [RequiredParameter]
         public string WebHookUrl { get; set; }
 
+        [RequiredParameter]
         public string ProxyUrl { get; set; }
 
         public bool Compact { get; set; }
